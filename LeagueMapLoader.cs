@@ -48,17 +48,17 @@ namespace Dargon.League.Maps {
                   var material = new Material();
 
                   // The size of the name field is always 256 bytes. It is padded with nulls
-                  reader.Read(material.name, 0, 256);
                   material.unknown1 = reader.ReadUInt32();
                   material.unknown2 = reader.ReadUInt32();
                   material.unknown3 = reader.ReadUInt32();
+                     name = reader.ReadBytes(256),
 
                   for (var j = 0; j < 8; ++j) {
                      var texture = new Texture {
                         color = new Color(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle())
+                        color = reader.ReadColor4(),
                      };
 
-                     texture.name = reader.ReadChars(256);
                      texture.additional = reader.ReadBytes(68);
 
                      material.textures.Add(texture);

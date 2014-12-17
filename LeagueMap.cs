@@ -13,7 +13,7 @@ namespace Dargon.League.Maps {
    }
 
    public class Material {
-      public char[] name = new char[256];
+      public byte[] name = new byte[256];
       public uint unknown1;
       public uint unknown2;
       public uint unknown3;
@@ -22,7 +22,7 @@ namespace Dargon.League.Maps {
 
    public class Texture {
       public Color color;
-      public char[] name = new char[256];
+      public byte[] name = new byte[256];
       public byte[] additional = new byte[68];
    }
 
