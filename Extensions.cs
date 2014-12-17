@@ -26,5 +26,58 @@ namespace Dargon.League.Maps {
 
          return aabb;
       }
+
+      public static Material ReadMaterial(this BinaryReader reader) {
+         var material = new Material {
+            // The size of the name field is always 256 bytes. It is padded with nulls
+            name = reader.ReadBytes(256),
+            unknown1 = reader.ReadUInt32(),
+            unknown2 = reader.ReadUInt32(),
+            unknown3 = reader.ReadUInt32()
+         };
+
+         for (var j = 0; j < 8; ++j) {
+            material.textures.Add(reader.ReadTexture());
+         }
+
+         return material;
+      }
+
+      public static Texture ReadTexture(this BinaryReader reader) {
+         return new Texture {
+            color = reader.ReadColor4(),
+            name = reader.ReadBytes(256),
+            additional = reader.ReadBytes(68)
+         };
+      }
+
+      public static Mesh ReadMesh(this BinaryReader reader) {
+         var flag0 = reader.ReadUInt32();
+         var zero = reader.ReadUInt32();
+
+         return new Mesh {
+            boundingSphere = reader.ReadFloat4(),
+            aabb = reader.ReadAABB(),
+            materialIndex = reader.ReadUInt32(),
+            simpleMesh = new MeshData {
+               vertexType = VertexType.SIMPLE,
+               vertexBufferIndex = reader.ReadUInt32(),
+               vertexBufferOffset = reader.ReadUInt32(),
+               vertexCount = reader.ReadUInt32(),
+               indexBufferIndex = reader.ReadUInt32(),
+               indexBufferOffset = reader.ReadUInt32(),
+               indexCount = reader.ReadUInt32()
+            },
+            complexMesh = new MeshData {
+               vertexType = VertexType.COMPLEX,
+               vertexBufferIndex = reader.ReadUInt32(),
+               vertexBufferOffset = reader.ReadUInt32(),
+               vertexCount = reader.ReadUInt32(),
+               indexBufferIndex = reader.ReadUInt32(),
+               indexBufferOffset = reader.ReadUInt32(),
+               indexCount = reader.ReadUInt32()
+            }
+         };
+      }
    }
 }

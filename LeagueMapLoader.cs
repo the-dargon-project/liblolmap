@@ -41,41 +41,19 @@ namespace Dargon.League.Maps {
 
                // Read materials
                leagueMap.materials.Capacity = materialCount;
-
                for (var i = 0; i < materialCount; ++i) {
-                  var material = new Material {
-                     // The size of the name field is always 256 bytes. It is padded with nulls
-                     name = reader.ReadBytes(256),
-                     unknown1 = reader.ReadUInt32(),
-                     unknown2 = reader.ReadUInt32(),
-                     unknown3 = reader.ReadUInt32()
-                  };
-
-                  for (var j = 0; j < 8; ++j) {
-                     var texture = new Texture {
-                        color = reader.ReadColor4(),
-                        name = reader.ReadBytes(256),
-                        additional = reader.ReadBytes(68)
-                     };
-
-
-                     material.textures.Add(texture);
-                  }
-
-                  leagueMap.materials.Add(material);
+                  leagueMap.materials.Add(reader.ReadMaterial());
                }
 
                // Read vertex buffers
                leagueMap.vertexBuffers.Capacity = vertexBufferCount;
-
                for (var i = 0; i < vertexBufferCount; ++i) {
                   var dataSize = reader.ReadInt32();
-                  leagueMap.vertexBuffers[i] = reader.ReadBytes(dataSize);
+                  leagueMap.vertexBuffers.Add(reader.ReadBytes(dataSize));
                }
 
                // Read index buffers
                leagueMap.indexBuffers.Capacity = indexBufferCount;
-
                for (var i = 0; i < indexBufferCount; ++i) {
                   var dataSize = reader.ReadInt32();
                   var d3dType = reader.ReadUInt32();
@@ -86,40 +64,14 @@ namespace Dargon.League.Maps {
                   };
 
                   for (var j = 0; j < indexCount; ++j) {
-                     leagueMap.indexBuffers[i][j] = reader.ReadUInt16();
+                     leagueMap.indexBuffers[i].Add(reader.ReadUInt16());
                   }
                }
 
                // Read meshes
                leagueMap.meshes.Capacity = meshCount;
-
                for (var i = 0; i < meshCount; ++i) {
-                  var flag0 = reader.ReadUInt32();
-                  var zero = reader.ReadUInt32();
-
-                  leagueMap.meshes[i] = new Mesh {
-                     boundingSphere = reader.ReadFloat4(),
-                     aabb = reader.ReadAABB(),
-                     materialIndex = reader.ReadUInt32(),
-                     simpleMesh = new MeshData {
-                        vertexType = VertexType.SIMPLE,
-                        vertexBufferIndex = reader.ReadUInt32(),
-                        vertexBufferOffset = reader.ReadUInt32(),
-                        vertexCount = reader.ReadUInt32(),
-                        indexBufferIndex = reader.ReadUInt32(),
-                        indexBufferOffset = reader.ReadUInt32(),
-                        indexCount = reader.ReadUInt32()
-                     },
-                     complexMesh = new MeshData {
-                        vertexType = VertexType.COMPLEX,
-                        vertexBufferIndex = reader.ReadUInt32(),
-                        vertexBufferOffset = reader.ReadUInt32(),
-                        vertexCount = reader.ReadUInt32(),
-                        indexBufferIndex = reader.ReadUInt32(),
-                        indexBufferOffset = reader.ReadUInt32(),
-                        indexCount = reader.ReadUInt32()
-                     }
-                  };
+                  leagueMap.meshes.Add(reader.ReadMesh());
                }
 
                // Read AABB data
