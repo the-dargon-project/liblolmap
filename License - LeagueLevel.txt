@@ -1,0 +1,5 @@
+This code is a port / rewrite in C# of https://github.com/eekysam/LeagueLevel
+Credit where credit is due
+
+eekysam has said in the project README:
+"Feel free to use it however you like as long as it doesn't violate any Riot Games stuff, but do credit me pls."
