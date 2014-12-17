@@ -26,33 +26,17 @@ namespace Dargon.League.Maps {
       public byte[] additional = new byte[68];
    }
 
-   public class AABB {
-      public Float3 min;
-      public Float3 max;
-   }
-
-   public class SimpleVertex {
-      public Float3 position;
-   }
-
-   public class ComplexVertex {
-      public Float3 position;
-      public Float3 normal;
-      public Float2 uv;
-      public byte[] extraData;
-   }
-
-   public enum VertexType : byte {
-      SIMPLE = 0,
-      COMPLEX = 1
-   }
-
    public class Mesh {
       public Float4 boundingSphere;
       public AABB aabb;
       public uint materialIndex;
       public MeshData simpleMesh;
       public MeshData complexMesh;
+   }
+
+   public class AABB {
+      public Float3 min;
+      public Float3 max;
    }
 
    public class MeshData {
@@ -65,5 +49,21 @@ namespace Dargon.League.Maps {
       public uint indexBufferIndex;
       public uint indexBufferOffset;
       public uint indexCount;
+   }
+
+   public enum VertexType : byte {
+      SIMPLE = 0,
+      COMPLEX = 1
+   }
+
+   public class SimpleVertex {
+      public Float3 position;
+   }
+
+   public class ComplexVertex {
+      public Float3 position;
+      public Float3 normal;
+      public Float2 uv;
+      public byte[] extraData;
    }
 }
