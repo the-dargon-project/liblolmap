@@ -1,12 +1,11 @@
-﻿// This code is a port / rewrite in C# of https://github.com/eekysam/LeagueLevel
-// Credit where credit is due
-
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Dargon.FileSystem;
+using ItzWarty;
 
 namespace Dargon.League.Maps {
-   class LeagueMapLoader : ILeagueMapLoader {
+   public class LeagueMapLoader : ILeagueMapLoader {
       private static readonly byte[] fileMagic = {0x4E, 0x56, 0x52, 0x00};
 
       public LeagueMap Load(IFileSystem system, IFileSystemHandle mapFolderHandle) {
@@ -44,22 +43,22 @@ namespace Dargon.League.Maps {
                // Read materials
                leagueMap.materials.Capacity = materialCount;
 
-               for (uint i = 0; i < materialCount; ++i) {
-                  var material = new Material();
-
-                  // The size of the name field is always 256 bytes. It is padded with nulls
-                  material.unknown1 = reader.ReadUInt32();
-                  material.unknown2 = reader.ReadUInt32();
-                  material.unknown3 = reader.ReadUInt32();
+               for (var i = 0; i < materialCount; ++i) {
+                  var material = new Material {
+                     // The size of the name field is always 256 bytes. It is padded with nulls
                      name = reader.ReadBytes(256),
+                     unknown1 = reader.ReadUInt32(),
+                     unknown2 = reader.ReadUInt32(),
+                     unknown3 = reader.ReadUInt32()
+                  };
 
                   for (var j = 0; j < 8; ++j) {
                      var texture = new Texture {
-                        color = new Color(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle())
                         color = reader.ReadColor4(),
+                        name = reader.ReadBytes(256),
+                        additional = reader.ReadBytes(68)
                      };
 
-                     texture.additional = reader.ReadBytes(68);
 
                      material.textures.Add(texture);
                   }
@@ -83,7 +82,9 @@ namespace Dargon.League.Maps {
                   var d3dType = reader.ReadUInt32();
 
                   var indexCount = dataSize / 2;
-                  leagueMap.indexBuffers[i].Capacity = indexCount;
+                  leagueMap.indexBuffers[i] = new List<ushort> {
+                     Capacity = indexCount
+                  };
 
                   for (var j = 0; j < indexCount; ++j) {
                      leagueMap.indexBuffers[i][j] = reader.ReadUInt16();
@@ -97,49 +98,36 @@ namespace Dargon.League.Maps {
                   var flag0 = reader.ReadUInt32();
                   var zero = reader.ReadUInt32();
 
-                  leagueMap.meshes[i].boundingSphere.x = reader.ReadSingle();
-                  leagueMap.meshes[i].boundingSphere.y = reader.ReadSingle();
-                  leagueMap.meshes[i].boundingSphere.z = reader.ReadSingle();
-                  leagueMap.meshes[i].boundingSphere.w = reader.ReadSingle();
-
-                  leagueMap.meshes[i].aabb.min.x = reader.ReadSingle();
-                  leagueMap.meshes[i].aabb.min.y = reader.ReadSingle();
-                  leagueMap.meshes[i].aabb.min.z = reader.ReadSingle();
-
-                  leagueMap.meshes[i].aabb.max.x = reader.ReadSingle();
-                  leagueMap.meshes[i].aabb.max.y = reader.ReadSingle();
-                  leagueMap.meshes[i].aabb.max.z = reader.ReadSingle();
-
-                  leagueMap.meshes[i].materialIndex = reader.ReadUInt32();
-
-                  leagueMap.meshes[i].simpleMesh.vertexType = VertexType.SIMPLE;
-                  leagueMap.meshes[i].simpleMesh.vertexBufferIndex = reader.ReadUInt32();
-                  leagueMap.meshes[i].simpleMesh.vertexBufferOffset = reader.ReadUInt32();
-                  leagueMap.meshes[i].simpleMesh.vertexCount = reader.ReadUInt32();
-                  leagueMap.meshes[i].simpleMesh.indexBufferIndex = reader.ReadUInt32();
-                  leagueMap.meshes[i].simpleMesh.indexBufferOffset = reader.ReadUInt32();
-                  leagueMap.meshes[i].simpleMesh.indexCount = reader.ReadUInt32();
-
-                  leagueMap.meshes[i].complexMesh.vertexType = VertexType.COMPLEX;
-                  leagueMap.meshes[i].complexMesh.vertexBufferIndex = reader.ReadUInt32();
-                  leagueMap.meshes[i].complexMesh.vertexBufferOffset = reader.ReadUInt32();
-                  leagueMap.meshes[i].complexMesh.vertexCount = reader.ReadUInt32();
-                  leagueMap.meshes[i].complexMesh.indexBufferIndex = reader.ReadUInt32();
-                  leagueMap.meshes[i].complexMesh.indexBufferOffset = reader.ReadUInt32();
-                  leagueMap.meshes[i].complexMesh.indexCount = reader.ReadUInt32();
+                  leagueMap.meshes[i] = new Mesh {
+                     boundingSphere = reader.ReadFloat4(),
+                     aabb = reader.ReadAABB(),
+                     materialIndex = reader.ReadUInt32(),
+                     simpleMesh = new MeshData {
+                        vertexType = VertexType.SIMPLE,
+                        vertexBufferIndex = reader.ReadUInt32(),
+                        vertexBufferOffset = reader.ReadUInt32(),
+                        vertexCount = reader.ReadUInt32(),
+                        indexBufferIndex = reader.ReadUInt32(),
+                        indexBufferOffset = reader.ReadUInt32(),
+                        indexCount = reader.ReadUInt32()
+                     },
+                     complexMesh = new MeshData {
+                        vertexType = VertexType.COMPLEX,
+                        vertexBufferIndex = reader.ReadUInt32(),
+                        vertexBufferOffset = reader.ReadUInt32(),
+                        vertexCount = reader.ReadUInt32(),
+                        indexBufferIndex = reader.ReadUInt32(),
+                        indexBufferOffset = reader.ReadUInt32(),
+                        indexCount = reader.ReadUInt32()
+                     }
+                  };
                }
 
                // Read AABB data
                leagueMap.AABBs.Capacity = aabbCount;
 
                for (var i = 0; i < aabbCount; ++i) {
-                  leagueMap.AABBs[i].min.x = reader.ReadSingle();
-                  leagueMap.AABBs[i].min.y = reader.ReadSingle();
-                  leagueMap.AABBs[i].min.z = reader.ReadSingle();
-
-                  leagueMap.AABBs[i].max.x = reader.ReadSingle();
-                  leagueMap.AABBs[i].max.y = reader.ReadSingle();
-                  leagueMap.AABBs[i].max.z = reader.ReadSingle();
+                  leagueMap.AABBs[i] = reader.ReadAABB();
 
                   var unknown1 = reader.ReadSingle();
                   var unknown2 = reader.ReadSingle();

@@ -21,7 +21,7 @@ namespace Dargon.League.Maps {
    }
 
    public class Texture {
-      public Color color;
+      public Color4 color;
       public byte[] name = new byte[256];
       public byte[] additional = new byte[68];
    }

@@ -1,6 +1,6 @@
 ﻿namespace Dargon.League.Maps {
-   public class Color {
-      public Color(float r, float g, float b, float a) {
+   public class Color4 {
+      public Color4(float r, float g, float b, float a) {
          this.r = r;
          this.g = g;
          this.b = b;
