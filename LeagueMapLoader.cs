@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
 using Dargon.FileSystem;
@@ -11,13 +11,13 @@ namespace Dargon.League.Maps {
          // Find the .nvr file
          IFileSystemHandle nvrFileHandle;
          if (system.AllocateRelativeHandleFromPath(mapFolderHandle, @"Scene/room.nvr", out nvrFileHandle) != IoResult.Success) {
-            return null;
+            throw new FileNotFoundException();
          }
 
          // Read the file and put it into a stream for easy processing
          byte[] nvrFileRawData;
          if (system.ReadAllBytes(nvrFileHandle, out nvrFileRawData) != IoResult.Success) {
-            return null;
+            throw new FileLoadException();
          }
 
          using (var ms = new MemoryStream(nvrFileRawData)) {
@@ -27,7 +27,7 @@ namespace Dargon.League.Maps {
                // Check magic
                var magic = reader.ReadBytes(4);
                if (!magic.SequenceEqual(fileMagic)) {
-                  return null;
+                  throw new Exception("NVR file magic number is not correct");
                }
 
                // Read meta data
