@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Dargon.FileSystem;
-using ItzWarty;
 
 namespace Dargon.League.Maps {
    public class LeagueMapLoader : ILeagueMapLoader {
