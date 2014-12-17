@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace Dargon.League.Maps {
    public static class Extensions {
@@ -49,6 +50,27 @@ namespace Dargon.League.Maps {
             name = reader.ReadBytes(256),
             additional = reader.ReadBytes(68)
          };
+      }
+
+      public static byte[] ReadVertexBuffer(this BinaryReader reader) {
+         var dataSize = reader.ReadInt32();
+         return reader.ReadBytes(dataSize);
+      }
+
+      public static List<ushort> ReadIndexBuffer(this BinaryReader reader) {
+         var dataSize = reader.ReadInt32();
+         var d3dType = reader.ReadUInt32();
+
+         var indexCount = dataSize / sizeof(ushort);
+         var indexBuffer = new List<ushort> {
+            Capacity = indexCount
+         };
+
+         for (var i = 0; i < indexCount; ++i) {
+            indexBuffer.Add(reader.ReadUInt16());
+         }
+
+         return indexBuffer;
       }
 
       public static Mesh ReadMesh(this BinaryReader reader) {

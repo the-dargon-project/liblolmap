@@ -48,24 +48,13 @@ namespace Dargon.League.Maps {
                // Read vertex buffers
                leagueMap.vertexBuffers.Capacity = vertexBufferCount;
                for (var i = 0; i < vertexBufferCount; ++i) {
-                  var dataSize = reader.ReadInt32();
-                  leagueMap.vertexBuffers.Add(reader.ReadBytes(dataSize));
+                  leagueMap.vertexBuffers.Add(reader.ReadVertexBuffer());
                }
 
                // Read index buffers
                leagueMap.indexBuffers.Capacity = indexBufferCount;
                for (var i = 0; i < indexBufferCount; ++i) {
-                  var dataSize = reader.ReadInt32();
-                  var d3dType = reader.ReadUInt32();
-
-                  var indexCount = dataSize / 2;
-                  leagueMap.indexBuffers[i] = new List<ushort> {
-                     Capacity = indexCount
-                  };
-
-                  for (var j = 0; j < indexCount; ++j) {
-                     leagueMap.indexBuffers[i].Add(reader.ReadUInt16());
-                  }
+                  leagueMap.indexBuffers.Add(reader.ReadIndexBuffer());
                }
 
                // Read meshes
@@ -76,7 +65,6 @@ namespace Dargon.League.Maps {
 
                // Read AABB data
                leagueMap.AABBs.Capacity = aabbCount;
-
                for (var i = 0; i < aabbCount; ++i) {
                   leagueMap.AABBs[i] = reader.ReadAABB();
 
