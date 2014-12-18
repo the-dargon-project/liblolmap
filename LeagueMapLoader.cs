@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Dargon.FileSystem;
@@ -40,31 +41,31 @@ namespace Dargon.League.Maps {
                var aabbCount = reader.ReadInt32();
 
                // Read materials
-               leagueMap.materials.Capacity = materialCount;
+               leagueMap.materials = new List<Material> { Capacity = materialCount };
                for (var i = 0; i < materialCount; ++i) {
                   leagueMap.materials.Add(reader.ReadMaterial());
                }
 
                // Read vertex buffers
-               leagueMap.vertexBuffers.Capacity = vertexBufferCount;
+               leagueMap.vertexBuffers = new List<byte[]> { Capacity = vertexBufferCount };
                for (var i = 0; i < vertexBufferCount; ++i) {
                   leagueMap.vertexBuffers.Add(reader.ReadVertexBuffer());
                }
 
                // Read index buffers
-               leagueMap.indexBuffers.Capacity = indexBufferCount;
+               leagueMap.indexBuffers = new List<List<ushort> > { Capacity = indexBufferCount };
                for (var i = 0; i < indexBufferCount; ++i) {
                   leagueMap.indexBuffers.Add(reader.ReadIndexBuffer());
                }
 
                // Read meshes
-               leagueMap.meshes.Capacity = meshCount;
+               leagueMap.meshes = new List<Mesh> { Capacity = meshCount };
                for (var i = 0; i < meshCount; ++i) {
                   leagueMap.meshes.Add(reader.ReadMesh());
                }
 
                // Read AABB data
-               leagueMap.AABBs.Capacity = aabbCount;
+               leagueMap.AABBs = new List<AABB> { Capacity = aabbCount };
                for (var i = 0; i < aabbCount; ++i) {
                   leagueMap.AABBs[i] = reader.ReadAABB();
 

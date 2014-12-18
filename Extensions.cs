@@ -34,7 +34,8 @@ namespace Dargon.League.Maps {
             name = reader.ReadBytes(256),
             unknown1 = reader.ReadUInt32(),
             unknown2 = reader.ReadUInt32(),
-            unknown3 = reader.ReadUInt32()
+            unknown3 = reader.ReadUInt32(),
+            textures = new List<Texture>()
          };
 
          for (var j = 0; j < 8; ++j) {
