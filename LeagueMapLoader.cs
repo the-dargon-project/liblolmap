@@ -67,7 +67,7 @@ namespace Dargon.League.Maps {
                // Read AABB data
                leagueMap.AABBs = new List<AABB> { Capacity = aabbCount };
                for (var i = 0; i < aabbCount; ++i) {
-                  leagueMap.AABBs[i] = reader.ReadAABB();
+                  leagueMap.AABBs.Add(reader.ReadAABB());
 
                   var unknown1 = reader.ReadSingle();
                   var unknown2 = reader.ReadSingle();
