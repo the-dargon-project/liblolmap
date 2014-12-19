@@ -138,5 +138,15 @@ namespace Dargon.League.Maps {
 
          return value == 0xFF;
       }
+
+      public static void WriteComplexVertex(this StreamWriter writer, ComplexVertex vertex) {
+         writer.WriteLine("v " + vertex.position.x + " " + vertex.position.y + " " + vertex.position.z);
+         writer.WriteLine("vn " + vertex.normal.x + " " + vertex.normal.y + " " + vertex.normal.z);
+         writer.WriteLine("vt " + vertex.uv.x + " " + vertex.uv.y);
+      }
+
+      public static void WriteSimpleVertex(this StreamWriter writer, SimpleVertex vertex) {
+         writer.WriteLine("v " + vertex.position.x + " " + vertex.position.y + " " + vertex.position.z);
+      }
    }
 }

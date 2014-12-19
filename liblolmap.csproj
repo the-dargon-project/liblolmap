@@ -49,8 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LeagueMapWriter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ILeagueMapLoader.cs" />
+    <Compile Include="ILeagueMapWriter.cs" />
     <Compile Include="LeagueMap.cs" />
     <Compile Include="LeagueMapLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
