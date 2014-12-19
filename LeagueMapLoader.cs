@@ -8,7 +8,7 @@ namespace Dargon.League.Maps {
    public class LeagueMapLoader : ILeagueMapLoader {
       private static readonly byte[] fileMagic = {0x4E, 0x56, 0x52, 0x00};
 
-      public LeagueMap Load(IFileSystem system, IFileSystemHandle mapFolderHandle) {
+      public LeagueMap LoadFromNVR(IFileSystem system, IFileSystemHandle mapFolderHandle) {
          // Find the .nvr file
          IFileSystemHandle nvrFileHandle;
          if (system.AllocateRelativeHandleFromPath(mapFolderHandle, @"Scene/room.nvr", out nvrFileHandle) != IoResult.Success) {

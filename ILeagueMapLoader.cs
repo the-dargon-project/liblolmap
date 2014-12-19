@@ -3,6 +3,6 @@
 namespace Dargon.League.Maps
 {
    public interface ILeagueMapLoader {
-      LeagueMap Load(IFileSystem system, IFileSystemHandle mapFolderHandle);
+      LeagueMap LoadFromNVR(IFileSystem system, IFileSystemHandle mapFolderHandle);
    }
 }
