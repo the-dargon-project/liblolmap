@@ -40,8 +40,6 @@ namespace Dargon.League.Maps {
    }
 
    public class MeshData {
-      public VertexType vertexType;
-
       public uint vertexBufferIndex;
       public uint vertexBufferOffset;
       public uint vertexCount;
