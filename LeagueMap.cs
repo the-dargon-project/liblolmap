@@ -49,9 +49,9 @@ namespace Dargon.League.Maps {
       public int indexCount;
    }
 
-   public enum VertexType : byte {
-      SIMPLE = 0,
-      COMPLEX = 1
+   public enum VertexType {
+      SIMPLE,
+      COMPLEX
    }
 
    public class SimpleVertex {
