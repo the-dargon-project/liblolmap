@@ -64,6 +64,33 @@ namespace Dargon.League.Maps {
                   leagueMap.meshes.Add(reader.ReadMesh());
                }
 
+               // Classify the vertex buffers
+               var vertexBufferTypes = new VertexType[vertexBufferCount];
+               foreach (var mesh in leagueMap.meshes) {
+                  vertexBufferTypes[mesh.simpleMesh.vertexBufferIndex] = VertexType.SIMPLE;
+                  vertexBufferTypes[mesh.complexMesh.vertexBufferIndex] = VertexType.COMPLEX;
+               }
+
+               // Parse the vertexBuffers
+               leagueMap.vertexBuffers = new List<Vertex>[vertexBufferCount];
+               for (var i = 0; i < vertexBufferCount; ++i) {
+                  leagueMap.vertexBuffers[i] = new List<Vertex>();
+
+                  using (var vertexBufferMS = new MemoryStream(vertexBuffers[i])) {
+                     using (var vertexBufferReader = new BinaryReader(vertexBufferMS)) {
+                        while (vertexBufferReader.BaseStream.Position < vertexBufferReader.BaseStream.Length) {
+                           if (vertexBufferTypes[i] == VertexType.SIMPLE) {
+                              leagueMap.vertexBuffers[i].Add(vertexBufferReader.ReadSimpleVertex());
+                           } else if (vertexBufferTypes[i] == VertexType.COMPLEX) {
+                              leagueMap.vertexBuffers[i].Add(vertexBufferReader.ReadComplexVertex());
+                           } else {
+                              throw new Exception("VertexType not recognized");
+                           }
+                        }
+                     }
+                  }
+               }
+
                // Read AABB data
                leagueMap.AABBs = new List<AABB> { Capacity = aabbCount };
                for (var i = 0; i < aabbCount; ++i) {

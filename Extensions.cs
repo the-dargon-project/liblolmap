@@ -53,7 +53,7 @@ namespace Dargon.League.Maps {
          };
       }
 
-      public static byte[] ReadVertexBuffer(this BinaryReader reader) {
+      public static byte[] ReadVertexBufferRawData(this BinaryReader reader) {
          var dataSize = reader.ReadInt32();
          return reader.ReadBytes(dataSize);
       }
@@ -96,6 +96,47 @@ namespace Dargon.League.Maps {
             indexBufferOffset = reader.ReadInt32(),
             indexCount = reader.ReadInt32()
          };
+      }
+
+      public static SimpleVertex ReadSimpleVertex(this BinaryReader reader) {
+         return new SimpleVertex {
+            position = reader.ReadFloat3()
+         };
+      }
+
+      public static ComplexVertex ReadComplexVertex(this BinaryReader reader) {
+         var vertex = new ComplexVertex {
+            position = reader.ReadFloat3(),
+            normal = reader.ReadFloat3(),
+            uv = reader.ReadFloat2()
+         };
+
+         var numExtraBytes = 0;
+         if (HasExtra(reader, 8)) {
+            numExtraBytes = 12;
+         } else if (HasExtra(reader, 4)) {
+            numExtraBytes = 8;
+         } else if (HasExtra(reader, 0)) {
+            numExtraBytes = 4;
+         }
+
+         vertex.extraData = reader.ReadBytes(numExtraBytes);
+
+         return vertex;
+      }
+
+      private static bool HasExtra(BinaryReader reader, long offset) {
+         var startPos = reader.BaseStream.Position;
+
+         if (startPos + offset >= reader.BaseStream.Length) {
+            return false;
+         }
+
+         reader.BaseStream.Position += offset + 3;
+         var value = reader.ReadByte();
+         reader.BaseStream.Position = startPos;
+
+         return value == 0xFF;
       }
    }
 }

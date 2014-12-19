@@ -6,10 +6,10 @@ namespace Dargon.League.Maps {
       public ushort minorVersion;
 
       public List<Material> materials;
-      public List<byte[]> vertexBuffers;
       public List<List<ushort> > indexBuffers;
       public List<Mesh> meshes;
       public List<AABB> AABBs;
+      public List<Vertex>[] vertexBuffers;
    }
 
    public class Material {
@@ -54,11 +54,13 @@ namespace Dargon.League.Maps {
       COMPLEX
    }
 
-   public class SimpleVertex {
+   public class Vertex {}
+
+   public class SimpleVertex : Vertex {
       public Float3 position;
    }
 
-   public class ComplexVertex {
+   public class ComplexVertex : Vertex {
       public Float3 position;
       public Float3 normal;
       public Float2 uv;
