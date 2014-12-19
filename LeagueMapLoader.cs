@@ -41,27 +41,27 @@ namespace Dargon.League.Maps {
                var aabbCount = reader.ReadInt32();
 
                // Read materials
-               leagueMap.materials = new List<Material> { Capacity = materialCount };
+               leagueMap.materials = new Material[materialCount];
                for (var i = 0; i < materialCount; ++i) {
-                  leagueMap.materials.Add(reader.ReadMaterial());
+                  leagueMap.materials[i] = reader.ReadMaterial();
                }
 
-               // Read vertex buffers
-               leagueMap.vertexBuffers = new List<byte[]> { Capacity = vertexBufferCount };
+               // Read vertex buffers raw data
+               var vertexBuffers = new byte[vertexBufferCount][];
                for (var i = 0; i < vertexBufferCount; ++i) {
-                  leagueMap.vertexBuffers.Add(reader.ReadVertexBuffer());
+                  vertexBuffers[i] = reader.ReadVertexBufferRawData();
                }
 
                // Read index buffers
-               leagueMap.indexBuffers = new List<List<ushort> > { Capacity = indexBufferCount };
+               leagueMap.indexBuffers = new List<ushort>[indexBufferCount];
                for (var i = 0; i < indexBufferCount; ++i) {
-                  leagueMap.indexBuffers.Add(reader.ReadIndexBuffer());
+                  leagueMap.indexBuffers[i] = reader.ReadIndexBuffer();
                }
 
                // Read meshes
-               leagueMap.meshes = new List<Mesh> { Capacity = meshCount };
+               leagueMap.meshes = new Mesh[meshCount];
                for (var i = 0; i < meshCount; ++i) {
-                  leagueMap.meshes.Add(reader.ReadMesh());
+                  leagueMap.meshes[i] = reader.ReadMesh();
                }
 
                // Classify the vertex buffers
@@ -92,9 +92,9 @@ namespace Dargon.League.Maps {
                }
 
                // Read AABB data
-               leagueMap.AABBs = new List<AABB> { Capacity = aabbCount };
+               leagueMap.AABBs = new AABB[aabbCount];
                for (var i = 0; i < aabbCount; ++i) {
-                  leagueMap.AABBs.Add(reader.ReadAABB());
+                  leagueMap.AABBs[i] = reader.ReadAABB();
 
                   var unknown1 = reader.ReadSingle();
                   var unknown2 = reader.ReadSingle();

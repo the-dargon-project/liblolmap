@@ -5,11 +5,11 @@ namespace Dargon.League.Maps {
       public ushort majorVersion;
       public ushort minorVersion;
 
-      public List<Material> materials;
-      public List<List<ushort> > indexBuffers;
-      public List<Mesh> meshes;
-      public List<AABB> AABBs;
+      public Material[] materials;
       public List<Vertex>[] vertexBuffers;
+      public List<ushort>[] indexBuffers;
+      public Mesh[] meshes;
+      public AABB[] AABBs;
    }
 
    public class Material {
