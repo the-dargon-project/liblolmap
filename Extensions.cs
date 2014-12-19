@@ -81,25 +81,20 @@ namespace Dargon.League.Maps {
          return new Mesh {
             boundingSphere = reader.ReadFloat4(),
             aabb = reader.ReadAABB(),
-            materialIndex = reader.ReadUInt32(),
-            simpleMesh = new MeshData {
-               vertexType = VertexType.SIMPLE,
-               vertexBufferIndex = reader.ReadUInt32(),
-               vertexBufferOffset = reader.ReadUInt32(),
-               vertexCount = reader.ReadUInt32(),
-               indexBufferIndex = reader.ReadUInt32(),
-               indexBufferOffset = reader.ReadUInt32(),
-               indexCount = reader.ReadUInt32()
-            },
-            complexMesh = new MeshData {
-               vertexType = VertexType.COMPLEX,
-               vertexBufferIndex = reader.ReadUInt32(),
-               vertexBufferOffset = reader.ReadUInt32(),
-               vertexCount = reader.ReadUInt32(),
-               indexBufferIndex = reader.ReadUInt32(),
-               indexBufferOffset = reader.ReadUInt32(),
-               indexCount = reader.ReadUInt32()
-            }
+            materialIndex = reader.ReadInt32(),
+            complexMesh = reader.ReadMeshData(),
+            simpleMesh = reader.ReadMeshData()
+         };
+      }
+
+      public static MeshData ReadMeshData(this BinaryReader reader) {
+         return new MeshData {
+            vertexBufferIndex = reader.ReadInt32(),
+            vertexBufferOffset = reader.ReadInt32(),
+            vertexCount = reader.ReadInt32(),
+            indexBufferIndex = reader.ReadInt32(),
+            indexBufferOffset = reader.ReadInt32(),
+            indexCount = reader.ReadInt32()
          };
       }
    }
