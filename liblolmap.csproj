@@ -38,6 +38,9 @@
       <HintPath>packages\libdargon.filesystem-api.0.0.2\lib\net45\libdargon.filesystem-api.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="libwarty">
+      <HintPath>packages\libwarty.0.0.16\lib\portable-net45+netcore45+MonoAndroid1+MonoTouch1\libwarty.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />

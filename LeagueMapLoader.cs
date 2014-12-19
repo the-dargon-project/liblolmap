@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Dargon.FileSystem;
+using ItzWarty;
 
 namespace Dargon.League.Maps {
    public class LeagueMapLoader : ILeagueMapLoader {
@@ -41,28 +42,16 @@ namespace Dargon.League.Maps {
                var aabbCount = reader.ReadInt32();
 
                // Read materials
-               leagueMap.materials = new Material[materialCount];
-               for (var i = 0; i < materialCount; ++i) {
-                  leagueMap.materials[i] = reader.ReadMaterial();
-               }
-
+               leagueMap.materials = Util.Generate(materialCount, i => reader.ReadMaterial());
+            
                // Read vertex buffers raw data
-               var vertexBuffers = new byte[vertexBufferCount][];
-               for (var i = 0; i < vertexBufferCount; ++i) {
-                  vertexBuffers[i] = reader.ReadVertexBufferRawData();
-               }
-
+               var vertexBuffers = Util.Generate(vertexBufferCount, i => reader.ReadVertexBufferRawData());
+               
                // Read index buffers
-               leagueMap.indexBuffers = new List<ushort>[indexBufferCount];
-               for (var i = 0; i < indexBufferCount; ++i) {
-                  leagueMap.indexBuffers[i] = reader.ReadIndexBuffer();
-               }
+               leagueMap.indexBuffers = Util.Generate(indexBufferCount, i => reader.ReadIndexBuffer());
 
                // Read meshes
-               leagueMap.meshes = new Mesh[meshCount];
-               for (var i = 0; i < meshCount; ++i) {
-                  leagueMap.meshes[i] = reader.ReadMesh();
-               }
+               leagueMap.meshes = Util.Generate(meshCount, i => reader.ReadMesh());
 
                // Classify the vertex buffers
                var vertexBufferTypes = new VertexType[vertexBufferCount];
