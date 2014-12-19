@@ -29,7 +29,7 @@ namespace Dargon.League.Maps {
    public class Mesh {
       public Float4 boundingSphere;
       public AABB aabb;
-      public uint materialIndex;
+      public int materialIndex;
       public MeshData simpleMesh;
       public MeshData complexMesh;
    }
@@ -40,13 +40,13 @@ namespace Dargon.League.Maps {
    }
 
    public class MeshData {
-      public uint vertexBufferIndex;
-      public uint vertexBufferOffset;
-      public uint vertexCount;
+      public int vertexBufferIndex;
+      public int vertexBufferOffset;
+      public int vertexCount;
       
-      public uint indexBufferIndex;
-      public uint indexBufferOffset;
-      public uint indexCount;
+      public int indexBufferIndex;
+      public int indexBufferOffset;
+      public int indexCount;
    }
 
    public enum VertexType : byte {
