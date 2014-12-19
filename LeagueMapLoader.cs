@@ -4,10 +4,16 @@ using System.IO;
 using System.Linq;
 using Dargon.FileSystem;
 using ItzWarty;
+using ItzWarty.Collections;
 
 namespace Dargon.League.Maps {
    public class LeagueMapLoader : ILeagueMapLoader {
       private static readonly byte[] fileMagic = {0x4E, 0x56, 0x52, 0x00};
+
+      private IReadOnlyDictionary<VertexType, Func<BinaryReader, Vertex> > kVertexReadersByVertexType = ImmutableDictionary.Of<VertexType, Func<BinaryReader, Vertex> >(
+         VertexType.SIMPLE, reader => reader.ReadSimpleVertex(),
+         VertexType.COMPLEX, reader => reader.ReadComplexVertex()
+      );
 
       public LeagueMap LoadFromNVR(IFileSystem system, IFileSystemHandle mapFolderHandle) {
          // Find the .nvr file
@@ -61,24 +67,7 @@ namespace Dargon.League.Maps {
                }
 
                // Parse the vertexBuffers
-               leagueMap.vertexBuffers = new List<Vertex>[vertexBufferCount];
-               for (var i = 0; i < vertexBufferCount; ++i) {
-                  leagueMap.vertexBuffers[i] = new List<Vertex>();
-
-                  using (var vertexBufferMS = new MemoryStream(vertexBuffers[i])) {
-                     using (var vertexBufferReader = new BinaryReader(vertexBufferMS)) {
-                        while (vertexBufferReader.BaseStream.Position < vertexBufferReader.BaseStream.Length) {
-                           if (vertexBufferTypes[i] == VertexType.SIMPLE) {
-                              leagueMap.vertexBuffers[i].Add(vertexBufferReader.ReadSimpleVertex());
-                           } else if (vertexBufferTypes[i] == VertexType.COMPLEX) {
-                              leagueMap.vertexBuffers[i].Add(vertexBufferReader.ReadComplexVertex());
-                           } else {
-                              throw new Exception("VertexType not recognized");
-                           }
-                        }
-                     }
-                  }
-               }
+               leagueMap.vertexBuffers = Util.Generate(vertexBufferCount, i => ReadVertexBuffer(vertexBuffers[i], vertexBufferTypes[i]));
 
                // Read AABB data
                leagueMap.AABBs = new AABB[aabbCount];
@@ -91,6 +80,26 @@ namespace Dargon.League.Maps {
                }
 
                return leagueMap;
+            }
+         }
+      }
+
+      private List<Vertex> ReadVertexBuffer(byte[] rawVertexBufferData, VertexType type) {
+         using (var ms = new MemoryStream(rawVertexBufferData)) {
+            using (var reader = new BinaryReader(ms)) {
+               Func<Vertex> vertexReader;
+               if (type == VertexType.COMPLEX) {
+                  vertexReader = () => reader.ReadComplexVertex();
+               } else {
+                  vertexReader = () => reader.ReadSimpleVertex();
+               }
+
+               var vertexBuffer = new List<Vertex>();
+               while (reader.BaseStream.Position < reader.BaseStream.Length) {
+                  vertexBuffer.Add(vertexReader());
+               }
+
+               return vertexBuffer;
             }
          }
       }
