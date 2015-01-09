@@ -139,6 +139,24 @@ namespace Dargon.League.Maps {
          return value == 0xFF;
       }
 
+      public static void Serialize(this Float2 floatTwo, List<float> buffer) {
+         buffer.Add(floatTwo.x);
+         buffer.Add(floatTwo.y);
+      }
+
+      public static void Serialize(this Float3 floatThree, List<float> buffer) {
+         buffer.Add(floatThree.x);
+         buffer.Add(floatThree.y);
+         buffer.Add(floatThree.z);
+      }
+
+      public static void Serialize(this Float4 floatFour, List<float> buffer) {
+         buffer.Add(floatFour.x);
+         buffer.Add(floatFour.y);
+         buffer.Add(floatFour.z);
+         buffer.Add(floatFour.w);
+      }
+
       public static void WriteComplexVertex(this StreamWriter writer, ComplexVertex vertex) {
          writer.WriteLine("v " + vertex.position.x + " " + vertex.position.y + " " + vertex.position.z);
          writer.WriteLine("vn " + vertex.normal.x + " " + vertex.normal.y + " " + vertex.normal.z);
