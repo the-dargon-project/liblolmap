@@ -120,7 +120,7 @@ namespace Dargon.League.Maps {
             numExtraBytes = 4;
          }
 
-         vertex.extraData = reader.ReadBytes(numExtraBytes);
+         var extraData = reader.ReadBytes(numExtraBytes);
 
          return vertex;
       }

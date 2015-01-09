@@ -64,6 +64,6 @@ namespace Dargon.League.Maps {
       public Float3 position;
       public Float3 normal;
       public Float2 uv;
-      public byte[] extraData;
+      // public byte[] extraData;
    }
 }
