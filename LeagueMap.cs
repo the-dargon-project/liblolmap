@@ -54,10 +54,17 @@ namespace Dargon.League.Maps {
       COMPLEX
    }
 
-   public class Vertex {}
+   abstract public class Vertex {
+      public abstract void Serialize(List<float> buffer);
+   }
 
    public class SimpleVertex : Vertex {
       public Float3 position;
+
+      public override void Serialize(List<float> buffer) {
+         position.Serialize(buffer);
+         buffer.Add(1.0f);
+      }
    }
 
    public class ComplexVertex : Vertex {
@@ -65,5 +72,13 @@ namespace Dargon.League.Maps {
       public Float3 normal;
       public Float2 uv;
       // public byte[] extraData;
+
+      public override void Serialize(List<float> buffer) {
+         position.Serialize(buffer);
+         buffer.Add(1.0f);
+         normal.Serialize(buffer);
+         buffer.Add(1.0f);
+         uv.Serialize(buffer);
+      }
    }
 }
